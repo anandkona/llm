@@ -59,3 +59,4 @@ export async function runMigrations() {
     console.error('[DB] Migration error:', error.message);
   }
 }
+

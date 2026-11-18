@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import universityAdminRoutes from './routes/universityAdmin.routes.js';
 import pool from './config/db.js';
 import { runMigrations } from './config/migrate.js';
 
@@ -28,6 +30,8 @@ app.use(morgan('dev'));
 // API Routes
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/university-admin', universityAdminRoutes);
 
 // Root route
 app.get('/', (req, res) => {
