@@ -272,3 +272,4 @@ export async function toggleUniversityStatus(req, res) {
     });
   }
 }
+

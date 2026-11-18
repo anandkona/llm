@@ -20,3 +20,4 @@ router.put('/profile', updateAdminProfile);
 router.put('/university', updateAdminUniversityDetails);
 
 export default router;
+

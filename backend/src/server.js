@@ -10,6 +10,8 @@ import adminRoutes from './routes/admin.routes.js';
 import universityAdminRoutes from './routes/universityAdmin.routes.js';
 import pool from './config/db.js';
 import { runMigrations } from './config/migrate.js';
+import { notFoundHandler, errorHandler } from './middlewares/error.middleware.js';
+import { logger } from './utils/logger.js';
 
 dotenv.config();
 
@@ -23,9 +25,12 @@ app.use(cors({
   credentials: true // Crucial for HTTP-only cookies
 }));
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10kb' })); // Body limit prevents DoS payload attacks
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// Logging middleware: dev to console, combined to log stream
 app.use(morgan('dev'));
+app.use(morgan('combined', { stream: logger.httpStream }));
 
 // API Routes
 app.use('/api', healthRoutes);
@@ -45,41 +50,38 @@ app.get('/', (req, res) => {
         login: 'POST /api/auth/login',
         logout: 'POST /api/auth/logout',
         currentUser: 'GET /api/auth/me'
+      },
+      superAdmin: {
+        universities: '/api/admin/universities'
+      },
+      universityAdmin: {
+        profile: '/api/university-admin/profile',
+        university: '/api/university-admin/university'
       }
     }
   });
 });
 
-// 404 Handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Endpoint not found' });
-});
-
-// Global Error Handler
-app.use((err, req, res, next) => {
-  console.error('Unhandled Server Error:', err);
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined
-  });
-});
+// 404 & Centralized Error Handlers
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 // Initialize database schema and start server
 async function startServer() {
   try {
     const conn = await pool.getConnection();
-    console.log(`[DB] Connected successfully to MySQL database: ${process.env.DB_NAME || 'llm'}`);
+    logger.info(`Connected successfully to MySQL database: ${process.env.DB_NAME || 'llm'}`);
     conn.release();
 
     // Auto-migrate tables if not existing
     await runMigrations();
 
     app.listen(PORT, () => {
-      console.log(`[Server] API running on http://localhost:${PORT}`);
-      console.log(`[Server] Health check: http://localhost:${PORT}/api/health`);
+      logger.info(`API running on http://localhost:${PORT}`);
+      logger.info(`Health check: http://localhost:${PORT}/api/health`);
     });
   } catch (err) {
-    console.error(`[Server] Failed to connect to MySQL: ${err.message}`);
+    logger.error(`Failed to connect to MySQL: ${err.message}`);
     process.exit(1);
   }
 }

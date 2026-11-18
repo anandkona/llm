@@ -21,3 +21,4 @@ router.put('/universities/:id', updateUniversity);
 router.patch('/universities/:id/deactivate', toggleUniversityStatus);
 
 export default router;
+

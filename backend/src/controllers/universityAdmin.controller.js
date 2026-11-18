@@ -206,3 +206,4 @@ export async function updateAdminUniversityDetails(req, res) {
     });
   }
 }
+
