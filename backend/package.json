@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Backend API for University LMS",
+  "description": "Backend API for LLM LMS Portal",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

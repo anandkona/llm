@@ -1,82 +1,87 @@
-# LLM Application
+# LLM LMS Application
 
-A full-stack web application with a modern React + Vite frontend, Express.js backend, and MySQL database.
+A full-stack enterprise web application built with a modern **React 19 + Vite** frontend, an **Express.js** REST API backend, and a **MySQL** database.
 
 ---
 
-## 📁 Repository Structure
+## 📁 Project Architecture
 
 ```text
 llm/
-├── client/                     # Frontend (React 19 + Vite)
-│   ├── public/                 # Static assets
-│   ├── src/
-│   │   ├── assets/             # Images, SVGs
+├── frontend/                   # Frontend Application (React 19 + Vite)
+│   ├── public/                 # Static public assets & logos
+│   ├── src/                    # UI Components, Pages, and Styles
+│   │   ├── assets/             # Media & SVG icons
 │   │   ├── pages/              # Login, Signup, ForgotPassword
-│   │   ├── App.jsx             # Main layout and routing
-│   │   ├── main.jsx            # Entry point
-│   │   └── index.css           # Global styles
-│   ├── index.html              # HTML template
-│   ├── vite.config.js          # Vite configuration
+│   │   ├── App.jsx             # Root layout & page router
+│   │   ├── main.jsx            # React root mount
+│   │   └── index.css           # Global typography & layout styles
+│   ├── index.html              # HTML5 template
+│   ├── vite.config.js          # Vite config & dev server
 │   └── package.json
 │
-├── server/                     # Backend (Node.js + Express)
+├── backend/                    # Backend API (Node.js + Express)
 │   ├── src/
-│   │   ├── config/             # DB connection pool (MySQL2)
+│   │   ├── config/             # Database connection pool (MySQL2)
 │   │   │   └── db.js
-│   │   ├── routes/             # API route handlers
+│   │   ├── routes/             # Express API route controllers
 │   │   │   └── health.routes.js
-│   │   └── server.js           # Server entry point
+│   │   └── server.js           # Express app bootstrap, CORS, & security middleware
+│   ├── .env                    # Environment configuration (ignored from git)
 │   ├── .env.example            # Environment template
 │   └── package.json
 │
-├── database/                   # SQL Schemas & Migrations
-│   └── init.sql                # Database initialization script
+├── database/                   # Database Schemas & Migrations
+│   └── init.sql                # SQL initialization script for MySQL
 │
-├── .gitignore                  # Global Git ignore rules
-└── README.md                   # Project documentation
+├── .gitignore                  # Global Git ignore rules (secrets & builds)
+└── README.md                   # System documentation
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack
+
+- **Frontend:** React 19, Vite, Material-UI (MUI), Emotion, Plain CSS
+- **Backend:** Node.js, Express.js, MySQL2 (Connection Pool), CORS, Helmet, Morgan
+- **Database:** MySQL 8.x / MariaDB (phpMyAdmin)
+
+---
+
+## 🚀 Local Development Setup
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or newer recommended)
-- [MySQL](https://www.mysql.com/) or [XAMPP](https://www.apachefriends.org/) running locally on port 3306
+- [Node.js](https://nodejs.org/) (v18+)
+- [XAMPP](https://www.apachefriends.org/) or local [MySQL](https://www.mysql.com/) server running on port `3306`
 
 ---
 
 ### 1. Database Setup
 
-1. Start Apache & MySQL in your XAMPP Control Panel.
-2. Open phpMyAdmin at [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
-3. Ensure the database `llm` exists, or run the initialization script located at:
+1. Start Apache & MySQL from your XAMPP Control Panel.
+2. Verify or open the database in phpMyAdmin:
+   - [http://localhost/phpmyadmin/index.php?route=/database/structure&db=llm](http://localhost/phpmyadmin/index.php?route=/database/structure&db=llm)
+3. Ensure the database `llm` exists. You can initialize the base tables by importing:
    ```text
    database/init.sql
    ```
 
 ---
 
-### 2. Backend Setup (`server/`)
+### 2. Backend Setup (`backend/`)
 
-1. Open a terminal and navigate to the `server/` directory:
+1. Open a terminal and navigate to `backend/`:
    ```bash
-   cd server
+   cd backend
    ```
-2. Copy the environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-   *(Or copy `.env.example` to `.env` on Windows)*
-
-3. Configure your `.env` settings:
+2. Set up your `.env` file (copied from `.env.example`):
    ```env
    PORT=5000
    NODE_ENV=development
-   CLIENT_URL=http://localhost:3000
+   FRONTEND_URL=http://localhost:3000
 
+   # MySQL Database Configuration
    DB_HOST=localhost
    DB_PORT=3306
    DB_USER=root
@@ -84,38 +89,24 @@ llm/
    DB_NAME=llm
    DB_CONNECTION_LIMIT=10
    ```
-
-4. Install dependencies:
+3. Install dependencies:
    ```bash
    npm install
    ```
-
-5. Start the backend development server:
+4. Start the backend in development mode:
    ```bash
    npm run dev
    ```
-   The backend API will be available at [http://localhost:5000](http://localhost:5000).
-
-6. Test the health check endpoint:
-   - **URL:** [http://localhost:5000/api/health](http://localhost:5000/api/health)
-   - **Expected response:**
-     ```json
-     {
-       "status": "ok",
-       "services": {
-         "server": { "status": "up", "port": 5000 },
-         "database": { "status": "connected", "database": "llm" }
-       }
-     }
-     ```
+   - API Server: [http://localhost:5000](http://localhost:5000)
+   - Health Check: [http://localhost:5000/api/health](http://localhost:5000/api/health)
 
 ---
 
-### 3. Frontend Setup (`client/`)
+### 3. Frontend Setup (`frontend/`)
 
-1. Open a new terminal and navigate to the `client/` directory:
+1. Open another terminal and navigate to `frontend/`:
    ```bash
-   cd client
+   cd frontend
    ```
 2. Install dependencies:
    ```bash
@@ -125,11 +116,12 @@ llm/
    ```bash
    npm run dev
    ```
-   The frontend will run at [http://localhost:3000](http://localhost:3000).
+   - Frontend Application: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 🛡️ Security & Git Notes
+## 🔒 Security Best Practices
 
-- Environment files (`.env`, `.env*.local`) and build artifacts (`node_modules/`, `dist/`) are safely ignored in `.gitignore`.
-- Always store sensitive keys, database credentials, and secrets exclusively inside `.env` files.
+- `.env` files are strictly excluded from source control via `.gitignore`.
+- Production builds (`dist/`, `build/`) and dependencies (`node_modules/`) are ignored across both workspaces.
+- Always use `.env.example` as a template for team onboarding.
