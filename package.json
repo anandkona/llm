@@ -1,0 +1,15 @@
+{
+  "name": "llm-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LLM Multi-Tenant University LMS Portal Monorepo",
+  "scripts": {
+    "setup": "node setup.js",
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "node -e \"console.log('Use separate terminals for backend and frontend or npm run dev:backend and npm run dev:frontend')\"",
+    "seed": "node backend/src/config/seed.js",
+    "build": "npm --prefix frontend run build"
+  }
+}
