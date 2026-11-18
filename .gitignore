@@ -1,3 +1,22 @@
+# Dependencies
+node_modules
+*/node_modules
+
+# Build artifacts
+dist
+dist-ssr
+build
+*/dist
+*/build
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+*/.env
+*/.env.*
+!*/.env.example
+
 # Logs
 logs
 *.log
@@ -7,24 +26,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# System and IDE files
 .DS_Store
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-# Environment & Secrets
-.env
-.env*.local
-src/.env
