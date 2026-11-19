@@ -94,17 +94,25 @@ function Signup({ onNavigate }) {
   };
 
   return (
-    <Container maxWidth={false} className="login-container">
-      <Paper elevation={6} className="login-card">
+    <Container maxWidth={false} className="login-container" sx={{ py: 3 }}>
+      <Paper
+        elevation={6}
+        className="login-card"
+        sx={{
+          maxWidth: "420px !important",
+          padding: "24px 28px !important",
+          borderRadius: "14px !important"
+        }}
+      >
         {/* Header with Centered Compact Logo */}
-        <Box className="login-header" sx={{ textAlign: "center", mb: 3 }}>
+        <Box className="login-header" sx={{ textAlign: "center", mb: 2 }}>
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
-              mb: 2
+              mb: 1
             }}
           >
             <Box
@@ -112,7 +120,7 @@ function Signup({ onNavigate }) {
               src="/logo.jpg"
               alt="Agnes IT Solutions Logo"
               sx={{
-                width: 85,
+                width: 75,
                 maxWidth: "100%",
                 height: "auto",
                 display: "block",
@@ -122,19 +130,20 @@ function Signup({ onNavigate }) {
             />
           </Box>
 
-          <Typography variant="h4" fontWeight="bold" textAlign="center">
+          <Typography variant="h5" fontWeight="bold" textAlign="center">
             Create Your Account
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ mt: 0.5 }}>
+          <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ mt: 0.3 }}>
             Register to access the LMS Portal
           </Typography>
         </Box>
 
         {/* Signup Form */}
-        <Box component="form" onSubmit={handleSubmit} className="login-form">
+        <Box component="form" onSubmit={handleSubmit} className="login-form" sx={{ gap: "14px !important" }}>
           <TextField
             fullWidth
+            size="small"
             label="Full Name"
             name="fullName"
             placeholder="Enter your full name"
@@ -145,7 +154,7 @@ function Signup({ onNavigate }) {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Person sx={{ color: "#1a2b55" }} />
+                    <Person fontSize="small" sx={{ color: "#1a2b55" }} />
                   </InputAdornment>
                 )
               }
@@ -154,6 +163,7 @@ function Signup({ onNavigate }) {
 
           <TextField
             fullWidth
+            size="small"
             label="Email Address"
             type="email"
             name="email"
@@ -165,7 +175,7 @@ function Signup({ onNavigate }) {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Email sx={{ color: "#1a2b55" }} />
+                    <Email fontSize="small" sx={{ color: "#1a2b55" }} />
                   </InputAdornment>
                 )
               }
@@ -174,6 +184,7 @@ function Signup({ onNavigate }) {
 
           <TextField
             fullWidth
+            size="small"
             label="Phone Number"
             type="tel"
             name="phone"
@@ -184,7 +195,7 @@ function Signup({ onNavigate }) {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Phone sx={{ color: "#1a2b55" }} />
+                    <Phone fontSize="small" sx={{ color: "#1a2b55" }} />
                   </InputAdornment>
                 )
               }
@@ -193,10 +204,11 @@ function Signup({ onNavigate }) {
 
           <TextField
             fullWidth
+            size="small"
             label="Password"
             type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="Create your password"
+            placeholder="Create password"
             value={formData.password}
             onChange={handleChange}
             required
@@ -204,7 +216,7 @@ function Signup({ onNavigate }) {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Lock sx={{ color: "#1a2b55" }} />
+                    <Lock fontSize="small" sx={{ color: "#1a2b55" }} />
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -212,9 +224,10 @@ function Signup({ onNavigate }) {
                     <IconButton
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
+                      size="small"
                       aria-label="Toggle password visibility"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
                     </IconButton>
                   </InputAdornment>
                 )
@@ -224,10 +237,11 @@ function Signup({ onNavigate }) {
 
           <TextField
             fullWidth
+            size="small"
             label="Confirm Password"
             type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
-            placeholder="Confirm your password"
+            placeholder="Confirm password"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
@@ -235,7 +249,7 @@ function Signup({ onNavigate }) {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Lock sx={{ color: "#1a2b55" }} />
+                    <Lock fontSize="small" sx={{ color: "#1a2b55" }} />
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -243,9 +257,10 @@ function Signup({ onNavigate }) {
                     <IconButton
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       edge="end"
+                      size="small"
                       aria-label="Toggle password visibility"
                     >
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      {showConfirmPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
                     </IconButton>
                   </InputAdornment>
                 )
@@ -253,22 +268,22 @@ function Signup({ onNavigate }) {
             }}
           />
 
-          {error && <Alert severity="error">{error}</Alert>}
-          {success && <Alert severity="success">{success}</Alert>}
+          {error && <Alert severity="error" sx={{ py: 0.5, fontSize: "0.85rem" }}>{error}</Alert>}
+          {success && <Alert severity="success" sx={{ py: 0.5, fontSize: "0.85rem" }}>{success}</Alert>}
 
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            size="large"
             disabled={loading}
             className="login-button"
+            sx={{ height: "42px !important", fontSize: "0.95rem !important", mt: 0.5 }}
           >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Create Account"}
+            {loading ? <CircularProgress size={20} color="inherit" /> : "Create Account"}
           </Button>
 
           {/* Centered Sign In Link */}
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", mt: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", mt: 0.5 }}>
             <Typography variant="body2" textAlign="center" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               Already have an account?{" "}
               <Link
