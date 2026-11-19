@@ -3,6 +3,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
+import { apiFetch } from "./services/api.js";
 import "./App.css";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
   useEffect(() => {
     async function checkSession() {
       try {
-        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        const res = await apiFetch('/api/auth/me');
         const data = await res.json();
         if (res.ok && data.success && data.user) {
           setCurrentUser(data.user);
@@ -31,7 +32,7 @@ function App() {
 
   const handleLoginSuccess = async () => {
     try {
-      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      const res = await apiFetch('/api/auth/me');
       const data = await res.json();
       if (res.ok && data.success && data.user) {
         setCurrentUser(data.user);
@@ -44,8 +45,9 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      await apiFetch('/api/auth/logout', { method: 'POST' });
     } catch (e) {}
+    localStorage.removeItem('auth_token');
     setCurrentUser(null);
     setCurrentPage("login");
   };

@@ -14,6 +14,7 @@ import AcademicYearManager from './AcademicYearManager.jsx';
 import CourseSubjectManager from './CourseSubjectManager.jsx';
 import UserMappingManager from './UserMappingManager.jsx';
 import UniversityManager from './UniversityManager.jsx';
+import { apiFetch } from '../services/api.js';
 
 const drawerWidth = 260;
 
@@ -58,7 +59,7 @@ export default function AdminDashboard({ user, onLogout }) {
   const fetchOverview = async () => {
     setLoadingOverview(true);
     try {
-      const res = await fetch('/api/dashboard/overview', { credentials: 'include' });
+      const res = await apiFetch('/api/dashboard/overview');
       const data = await res.json();
       if (data.success) {
         setOverviewData(data);

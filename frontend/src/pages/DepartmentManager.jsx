@@ -5,6 +5,7 @@ import {
   DialogActions, TablePagination, InputAdornment, Alert, CircularProgress, MenuItem
 } from '@mui/material';
 import { Search, Add, Edit, Delete, Refresh } from '@mui/icons-material';
+import { apiFetch } from '../services/api.js';
 
 export default function DepartmentManager() {
   const [departments, setDepartments] = useState([]);
@@ -32,7 +33,7 @@ export default function DepartmentManager() {
         ...(search && { search }),
         ...(statusFilter && { status: statusFilter })
       });
-      const res = await fetch(`/api/academic/departments?${queryParams}`, { credentials: 'include' });
+      const res = await apiFetch(`/api/academic/departments?${queryParams}`);
       const data = await res.json();
       if (data.success) {
         setDepartments(data.data);
@@ -82,10 +83,8 @@ export default function DepartmentManager() {
       const url = isEditing ? `/api/academic/departments/${editId}` : '/api/academic/departments';
       const method = isEditing ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
       const resData = await res.json();
@@ -107,9 +106,8 @@ export default function DepartmentManager() {
     if (!window.confirm(`Are you sure you want to delete department: ${name}?`)) return;
 
     try {
-      const res = await fetch(`/api/academic/departments/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
+      const res = await apiFetch(`/api/academic/departments/${id}`, {
+        method: 'DELETE'
       });
       const data = await res.json();
       if (res.ok && data.success) {

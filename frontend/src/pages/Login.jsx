@@ -65,6 +65,10 @@ function Login({ onNavigate, onLoginSuccess }) {
         return;
       }
 
+      if (data.token) {
+        localStorage.setItem('auth_token', data.token);
+      }
+
       setMessage("Logged in successfully! Redirecting...");
       if (onLoginSuccess) {
         onLoginSuccess();
