@@ -85,14 +85,30 @@ function Login({ onNavigate, onLoginSuccess }) {
     >
       <Paper elevation={6} className="login-card">
 
-        <Box className="login-header">
+        <Box className="login-header" sx={{ textAlign: 'center', mb: 4 }}>
 
-          {/* Company Logo Centered */}
-          <Box className="company-logo" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
-            <img
+          {/* Centered Company Logo */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              mb: 3
+            }}
+          >
+            <Box
+              component="img"
               src="/logo.jpg"
               alt="Agnes IT Solutions Logo"
-              style={{ display: 'block', margin: '0 auto', maxWidth: 120, height: 'auto', borderRadius: 8 }}
+              sx={{
+                width: 85,
+                maxWidth: '100%',
+                height: 'auto',
+                display: 'block',
+                mx: 'auto',
+                borderRadius: 2
+              }}
             />
           </Box>
 
@@ -100,7 +116,7 @@ function Login({ onNavigate, onLoginSuccess }) {
             Welcome Back!
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" textAlign="center">
+          <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ mt: 0.5 }}>
             Please sign in to continue
           </Typography>
         </Box>
