@@ -25,30 +25,57 @@ import {
 
 import "./Login.css";
 
-function Login({ onNavigate }) {  
+function Login({ onNavigate, onLoginSuccess }) {  
   // Store email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Password visibility
   const [showPassword, setShowPassword] = useState(false);
 
-  // Remember me
-  const [rememberMe, setRememberMe] = useState(false);
-
   // Login feedback
   const [message, setMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   // Handle login form submission
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
 
     if (!email || !password) {
-      setMessage("Please enter your email and password.");
+      setErrorMsg("Please enter your email and password.");
       return;
     }
 
-    setMessage("Login form submitted successfully!");
+    setLoading(true);
+    setErrorMsg("");
+    setMessage("");
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email: email.trim(), password })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setErrorMsg(data.error || 'Login failed. Please check your credentials.');
+        return;
+      }
+
+      setMessage("Logged in successfully! Redirecting...");
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else if (onNavigate) {
+        onNavigate("dashboard");
+      }
+    } catch (err) {
+      setErrorMsg("Unable to reach server. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,19 +87,20 @@ function Login({ onNavigate }) {
 
         <Box className="login-header">
 
-          {/* Company Logo */}
-          <Box className="company-logo">
+          {/* Company Logo Centered */}
+          <Box className="company-logo" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
             <img
               src="/logo.jpg"
               alt="Agnes IT Solutions Logo"
+              style={{ display: 'block', margin: '0 auto', maxWidth: 120, height: 'auto', borderRadius: 8 }}
             />
           </Box>
 
-          <Typography variant="h4" fontWeight="bold">
+          <Typography variant="h4" fontWeight="bold" textAlign="center">
             Welcome Back!
           </Typography>
 
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" textAlign="center">
             Please sign in to continue
           </Typography>
         </Box>
@@ -134,33 +162,27 @@ function Login({ onNavigate }) {
             }}
           />
 
-          {/* Remember Me */}
-          <Box className="login-options">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={rememberMe}
-                  onChange={(e) =>
-                    setRememberMe(e.target.checked)
-                  }
-                />
-              }
-              label="Remember me"
-            />
-
+          {/* Forgot Password link aligned right */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mt: -1 }}>
             <Link
               component="button"
               type="button"
               underline="hover"
               onClick={() => onNavigate ? onNavigate("forgot") : null}
+              sx={{ fontSize: '0.875rem' }}
             >
               Forgot Password?
             </Link>
           </Box>
 
           {/* Login Feedback */}
+          {errorMsg && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {errorMsg}
+            </Alert>
+          )}
           {message && (
-            <Alert severity="info">
+            <Alert severity="success" sx={{ mb: 2 }}>
               {message}
             </Alert>
           )}
@@ -171,27 +193,31 @@ function Login({ onNavigate }) {
             fullWidth
             variant="contained"
             size="large"
+            disabled={loading}
             className="login-button"
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </Button>
 
-          {/* Registration Link */}
-          <Typography
-            variant="body2"
-            textAlign="center"
-            className="register-text"
-          >
-            Don't have an account?{" "}
-            <Link
-              component="button"
-              type="button"
-              underline="hover"
-              onClick={() => onNavigate ? onNavigate("signup") : null}
+          {/* Registration Link Centered */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', mt: 2 }}>
+            <Typography
+              variant="body2"
+              textAlign="center"
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
             >
-              Sign Up
-            </Link>
-          </Typography>
+              Don't have an account?{" "}
+              <Link
+                component="button"
+                type="button"
+                underline="hover"
+                sx={{ fontWeight: 'bold' }}
+                onClick={() => onNavigate ? onNavigate("signup") : null}
+              >
+                Sign Up
+              </Link>
+            </Typography>
+          </Box>
 
         </Box>
       </Paper>

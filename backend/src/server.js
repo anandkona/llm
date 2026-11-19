@@ -8,6 +8,7 @@ import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import universityAdminRoutes from './routes/universityAdmin.routes.js';
+import academicRoutes from './routes/academic.routes.js';
 import pool from './config/db.js';
 import { runMigrations } from './config/migrate.js';
 import { notFoundHandler, errorHandler } from './middlewares/error.middleware.js';
@@ -37,6 +38,7 @@ app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/university-admin', universityAdminRoutes);
+app.use('/api/academic', academicRoutes);
 
 // Root route
 app.get('/', (req, res) => {

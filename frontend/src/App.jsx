@@ -1,22 +1,82 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 import "./App.css";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("login");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // Check current session on load
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        const data = await res.json();
+        if (res.ok && data.success && data.user) {
+          setCurrentUser(data.user);
+          setCurrentPage("dashboard");
+        }
+      } catch (err) {
+        // Not logged in
+      } finally {
+        setCheckingAuth(false);
+      }
+    }
+    checkSession();
+  }, []);
+
+  const handleLoginSuccess = async () => {
+    try {
+      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      const data = await res.json();
+      if (res.ok && data.success && data.user) {
+        setCurrentUser(data.user);
+        setCurrentPage("dashboard");
+      }
+    } catch (e) {
+      setCurrentPage("dashboard");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch (e) {}
+    setCurrentUser(null);
+    setCurrentPage("login");
+  };
+
+  if (checkingAuth) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'sans-serif' }}>
+        Loading LMS Portal...
+      </div>
+    );
+  }
 
   return (
     <div className="app">
       {currentPage === "login" && (
-        <Login onNavigate={setCurrentPage} />
+        <Login
+          onNavigate={setCurrentPage}
+          onLoginSuccess={handleLoginSuccess}
+        />
       )}
       {currentPage === "signup" && (
         <Signup onNavigate={setCurrentPage} />
       )}
       {currentPage === "forgot" && (
         <ForgotPassword onNavigate={setCurrentPage} />
+      )}
+      {currentPage === "dashboard" && (
+        <AdminDashboard
+          user={currentUser}
+          onLogout={handleLogout}
+        />
       )}
     </div>
   );
